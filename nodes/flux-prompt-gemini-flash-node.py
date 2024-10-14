@@ -54,7 +54,17 @@ class FluxPromptGeminiFlashNode:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "prompt": ("STRING", {"default": "Analyze the situation in details.", "multiline": True}),
+                "prompt": ("STRING", {"default": "按需求自定义指令或者使用下面的预设指令！", "multiline": True}),
+                "preset_prompt": (["无指令",  # 添加空值选项
+                                   "文本指令-提示词增强",
+                                   "文本指令-文本打标",
+                                   "文本指令-翻译成中文",
+                                   "文本指令-翻译成英文",
+                                   "图片指令-图片描述",
+                                   "图片指令-图片打标",
+                                   "视频指令-视频描述",
+                                   "音频指令-音频描述"],
+                                  {"default": "无指令"}),  # 默认值设为空
                 "input_type": (["text", "image", "video", "audio"], {"default": "text"}),
                 "api_key": ("STRING", {"default": ""}),
                 "proxy": ("STRING", {"default": ""})
@@ -93,7 +103,26 @@ class FluxPromptGeminiFlashNode:
                 height = max_size
         return image.resize((width, height), Image.LANCZOS)
 
-    def generate_content(self, prompt, input_type, api_key, proxy, text_input=None, image=None, video=None, audio=None, max_output_tokens=1000, temperature=0.4):
+    def generate_content(self, prompt, preset_prompt, input_type, api_key, proxy, text_input=None, image=None, video=None, audio=None, max_output_tokens=1000, temperature=0.4):
+        # 根据选定的中文选项设置 prompt
+        preset_prompt_map = {
+            "无指令": "",  # 空值
+            "文本指令-提示词增强": "Generate a creative description",
+            "文本指令-文本打标": "Transform the text into tags, separated by commas, don’t use duplicate tags.",
+            "文本指令-翻译成中文": "Translate this text into Chinese",
+            "文本指令-翻译成英文": "Translate this text into English",
+            "图片指令-图片描述": "Describe the image in detail and accurately",
+            "图片指令-图片打标": "Use tags to briefly and accurately describe this image, separated by commas, don’t use duplicate tags.",
+            "视频指令-视频描述": "Describe the video in detail and accurately.",
+            "音频指令-音频描述": "Describe the audio in detail and accurately."
+        }
+
+        # 获取对应的英文提示词
+        prompt_from_preset = preset_prompt_map.get(preset_prompt, "")
+        
+        if prompt_from_preset:
+            prompt = prompt_from_preset  # 将下拉菜单中的选择覆盖到 prompt 中
+
         config_updated = False
         if api_key and api_key != self.api_key:
             self.api_key = api_key

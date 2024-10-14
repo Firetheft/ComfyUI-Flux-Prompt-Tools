@@ -11,6 +11,7 @@ node_list = [
     "flux-prompt-enhance-node",
     "flux-prompt-generator",
     "flux-prompt-gemini-flash-node",
+    "minicpm-v-2-6-int4-node",
 ]
 
 NODE_CLASS_MAPPINGS = {}
