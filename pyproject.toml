@@ -1,0 +1,15 @@
+[project]
+name = "comfyui-flux-prompt-tools"
+description = "NODES:Flux Prompt Enhance, Flux Prompt Gemini Flash, Flux Prompt Generator, MiniCPM V2.6 Int4"
+version = "1.0.0"
+license = {file = "LICENSE"}
+dependencies = ["transformers", "torch", "tqdm", "huggingface_hub", "torchvision", "numpy>=1.21.0", "sentencepiece==0.1.99", "Pillow>=10.1.0", "google-generativeai"]
+
+[project.urls]
+Repository = "https://github.com/Firetheft/ComfyUI-Flux-Prompt-Tools"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-Flux-Prompt-Tools"
+Icon = ""
